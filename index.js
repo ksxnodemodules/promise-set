@@ -1,3 +1,3 @@
 'use strict'
-XPromiseSet = require('./x.js')
+const XPromiseSet = require('./x.js')
 module.exports = XPromiseSet(Promise, Set)
