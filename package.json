@@ -1,0 +1,33 @@
+{
+  "name": "promise-set",
+  "version": "0.0.0",
+  "description": "Manipulate promises with map and filter",
+  "main": "index.js",
+  "scripts": {
+    "test": "bash -c './sh/test.sh'",
+    "clean": "bash -c './sh/clean.sh'",
+    "fix": "bash -c './sh/fix.sh'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ksxnodemodules/promise-set.git"
+  },
+  "keywords": [
+    "promise",
+    "set",
+    "promise-array",
+    "promise-map"
+  ],
+  "dependencies": {
+    "x-iterable-base": "^2.1.0"
+  },
+  "devDependencies": {
+    "standard": "7.0.0"
+  },
+  "author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ksxnodemodules/promise-set/issues"
+  },
+  "homepage": "https://github.com/ksxnodemodules/promise-set#readme"
+}

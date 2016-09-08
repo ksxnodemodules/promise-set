@@ -1,0 +1,17 @@
+# top-most
+root = true
+
+# end of line
+insert_final_new_line = true
+
+# charset
+[*.{js,sh,json,yml,md}]
+charset = utf-8
+
+# tab
+[*.{js,json,md}]
+indent_style = space
+indent_size = 2
+[*.sh]
+indent_style = tab
+indent_size = 4
