@@ -47,16 +47,14 @@ const PromiseSet = require('promise-set')
 
 ### Methods
 
-#### `.all()`
+#### `getter .all`
 
- * Arguments: None
  * Returns: A `XPromise` instance
 
 Equivalent to [`XPromise::all`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
 
-#### `.race()`
+#### `getter .race`
 
- * Arguments: None
  * Returns: A `XPromise` instance
 
 Equivalent to [`XPromise::race`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)
