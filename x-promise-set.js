@@ -35,7 +35,7 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
             value =>
               onfulfill(value, resolve, reject),
             reason =>
-              onreject(value, resolve, reject)
+              onreject(reason, resolve, reject)
           )
         )
       )
