@@ -83,11 +83,11 @@ const promiseset = new MyPromiseSet(
 )
 promiseset
   .mapExecutor(
-    onfulfill, // fn (val: ?) -> ?
+    onfulfill, // fn (val: ?, resolve: fn (?) -> void, reject: fn (?) -> void) -> void
     onreject
   )
   .map(
-    onfulfill, // fn (val: ?) throw ? -> ?
+    onfulfill, // fn (val: ?) !> ? -> ?
     onreject
   )
   .filter(

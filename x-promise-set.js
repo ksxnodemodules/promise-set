@@ -3,7 +3,7 @@
 const XIterable = require('x-iterable-base/template')
 
 function XPromiseSet (XPromise = Promise, XSet = Set) {
-  const tryexec = fn => value => (resolve, reject) => {
+  const tryexec = fn => (value, resolve, reject) => {
     try {
       resolve(fn(value))
     } catch (error) {
@@ -30,8 +30,14 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
     }
     mapExecutor (onfulfill, onreject) {
       return super.map(
-        promise =>
-          promise.then(onfulfill, onreject)
+        promise => new Promise(
+          (resolve, reject) => promise.then(
+            value =>
+              onfulfill(value, resolve, reject),
+            reason =>
+              onreject(value, resolve, reject)
+          )
+        )
       )
     }
     map (onfulfill, onreject) {
