@@ -59,6 +59,11 @@ Equivalent to [`XPromise::all`](https://developer.mozilla.org/en/docs/Web/JavaSc
 
 Equivalent to [`XPromise::race`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)
 
+#### `.toPromiseSet()`
+
+ * Arguments: None
+ * Returns: A `XPromiseSet` instance
+
 #### `.map(onfulfill, onreject)`
 
  * Arguments: Two functions `onfulfill` and `onreject` that take 1 argument and return value to resolve or throw exception to reject
