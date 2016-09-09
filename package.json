@@ -23,7 +23,7 @@
     "x-iterable-base": "^2.1.0"
   },
   "devDependencies": {
-    "standard": "7.0.0"
+    "standard": "8.0.0"
   },
   "author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
   "license": "MIT",
