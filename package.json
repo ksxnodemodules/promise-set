@@ -16,7 +16,8 @@
     "promise",
     "set",
     "promise-array",
-    "promise-map"
+    "promise-map",
+    "promise-filter"
   ],
   "dependencies": {
     "x-iterable-base": "^2.1.0"
