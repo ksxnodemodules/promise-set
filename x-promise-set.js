@@ -1,6 +1,7 @@
 'use strict'
 
 const XIterable = require('x-iterable-base/template')
+const {getPrototypeOf} = Object
 const CALL_RESOLVE = (value, resolve) => resolve(value)
 const CALL_REJECT = (value, resolve, reject) => reject(value)
 const RETURN = x => x
@@ -16,6 +17,19 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       return new XPromise(promise)
     }
     throw new TypeError('Cannot convert value to promise')
+  }
+  const mkmap = object => {
+    const origin = getPrototypeOf(object)
+    return {
+      has: x => origin.has(x),
+      delete: x => origin.delete(x),
+      entries: () => origin.entries(),
+      keys: () => origin.keys(),
+      values: () => origin.values(),
+      clear: () => origin.clear(),
+      get size () { return origin.size },
+      __proto__: object
+    }
   }
   const tryexec = fn => (value, resolve, reject) => {
     try {
@@ -43,13 +57,15 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       return XPromise.race(this)
     }
     mapExecutor (onfulfill = CALL_RESOLVE, onreject = CALL_REJECT) {
-      return super.map(
-        promise => new Promise(
-          (resolve, reject) => promise.then(
-            value =>
-              onfulfill(value, resolve, reject),
-            reason =>
-              onreject(reason, resolve, reject)
+      return mkmap(
+        super.map(
+          promise => new Promise(
+            (resolve, reject) => promise.then(
+              value =>
+                onfulfill(value, resolve, reject),
+              reason =>
+                onreject(reason, resolve, reject)
+            )
           )
         )
       )
@@ -58,14 +74,19 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       return this.mapExecutor(tryexec(onfulfill), tryexec(onreject))
     }
     filter (onfulfill = RETURN_TRUE, onreject = RETURN_TRUE) {
-      return super.map(
-        promise => new Promise(
-          (resolve, reject) => promise.then(
-            value => onfulfill(value) && resolve(value),
-            error => onreject(error) && reject(error)
+      return mkmap(
+        super.map(
+          promise => new Promise(
+            (resolve, reject) => promise.then(
+              value => onfulfill(value) && resolve(value),
+              error => onreject(error) && reject(error)
+            )
           )
         )
       )
+    }
+    forEach (onfulfill, onreject) {
+      this.map(onfulfill, onreject)
     }
     static get XPromiseSet () {
       return XPromiseSet
