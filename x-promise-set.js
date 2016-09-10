@@ -1,7 +1,7 @@
 'use strict'
 
 const XIterable = require('x-iterable-base/template')
-const {getPrototypeOf} = Object
+const {getPrototypeOf, assign} = Object
 const CALL_RESOLVE = (value, resolve) => resolve(value)
 const CALL_REJECT = (value, resolve, reject) => reject(value)
 const RETURN = x => x
@@ -26,8 +26,6 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       entries: () => origin.entries(),
       keys: () => origin.keys(),
       values: () => origin.values(),
-      clear: () => origin.clear(),
-      get size () { return origin.size },
       __proto__: object
     }
   }
