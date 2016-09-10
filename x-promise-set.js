@@ -8,7 +8,7 @@ const THROW = x => { throw x }
 const RETURN_TRUE = () => true
 
 function XPromiseSet (XPromise = Promise, XSet = Set) {
-  function mkpromise (promise) {
+  const mkpromise = promise => {
     if (promise instanceof XPromise) {
       return promise
     }
