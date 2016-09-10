@@ -1,7 +1,7 @@
 'use strict'
 
 const XIterable = require('x-iterable-base/template')
-const {getPrototypeOf, assign} = Object
+const {getPrototypeOf} = Object
 const CALL_RESOLVE = (value, resolve) => resolve(value)
 const CALL_REJECT = (value, resolve, reject) => reject(value)
 const RETURN = x => x
@@ -36,6 +36,20 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       reject(error)
     }
   }
+  const mksum = (rsrj, rjrs, self) => new XPromise((...args) => {
+    const {[rsrj]: resolvereject, [rjrs]: rejectresolve} = args
+    const {size} = self
+    const rsrjresult = new XSet()
+    for (const promise of self) {
+      promise.then(
+        value => {
+          rsrjresult.add(value)
+          size === rsrjresult.size && resolvereject(rsrjresult)
+        },
+        rejectresolve
+      )
+    }
+  })
   class PromiseSet extends XIterable(XSet) {
     constructor (...args) {
       super(args.map(mkpromise))
@@ -49,10 +63,10 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       return this
     }
     get all () {
-      return XPromise.all(this)
+      return mksum(0, 1, this)
     }
     get race () {
-      return XPromise.race(this)
+      return mksum(1, 0, this)
     }
     mapExecutor (onfulfill = CALL_RESOLVE, onreject = CALL_REJECT) {
       return mkmap(
