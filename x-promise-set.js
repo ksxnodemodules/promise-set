@@ -8,6 +8,15 @@ const THROW = x => { throw x }
 const RETURN_TRUE = () => true
 
 function XPromiseSet (XPromise = Promise, XSet = Set) {
+  function mkpromise (promise) {
+    if (promise instanceof XPromise) {
+      return promise
+    }
+    if (typeof promise === 'function') {
+      return new XPromise(promise)
+    }
+    throw new TypeError('Cannot convert value to promise')
+  }
   const tryexec = fn => (value, resolve, reject) => {
     try {
       resolve(fn(value))
@@ -67,15 +76,6 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
     static get XSet () {
       return XSet
     }
-  }
-  function mkpromise (promise) {
-    if (promise instanceof XPromise) {
-      return promise
-    }
-    if (typeof promise === 'function') {
-      return new XPromise(promise)
-    }
-    throw new TypeError('Cannot convert value to promise')
   }
   return PromiseSet
 }
