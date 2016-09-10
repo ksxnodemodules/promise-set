@@ -86,16 +86,21 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       return this.mapExecutor(tryexec(onfulfill), tryexec(onreject))
     }
     filter (onfulfill = RETURN_TRUE, onreject = RETURN_TRUE) {
-      return mkmap(
-        super.map(
-          promise => new Promise(
-            (resolve, reject) => promise.then(
-              value => onfulfill(value) && resolve(value),
-              error => onreject(error) && reject(error)
-            )
+      let {size} = this
+      const proto = super.map(
+        promise => new Promise(
+          (resolve, reject) => promise.then(
+            value => onfulfill(value) ? resolve(value) : --size,
+            error => onreject(error) ? reject(error) : --size
           )
         )
       )
+      return mkmap({
+        get size () {
+          return size
+        },
+        __proto__: proto
+      })
     }
     forEach (onfulfill, onreject) {
       this.map(onfulfill, onreject)
