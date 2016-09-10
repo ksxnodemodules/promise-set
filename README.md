@@ -98,3 +98,7 @@ promiseset
     onreject
   )
 ```
+
+## License
+
+MIT
