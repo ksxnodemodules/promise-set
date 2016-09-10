@@ -11,9 +11,9 @@
 ## Requirements
 
  * ECMAScript 6 supports
-  - V8 > 5.0.0
-  - Node > 6.0.0
-  - Chrome > 50.0.0
+  - V8 ≥ 5.0.0
+  - Node ≥ 6.0.0
+  - Chrome ≥ 50.0.0
 
 ## Usage
 
