@@ -1,7 +1,6 @@
 'use strict'
 
-const {dirname} = require('path')
-const PromiseSet = require(dirname(__dirname))
+const PromiseSet = require('..')
 const {XPromiseSet} = PromiseSet
 
 function testnormal (CPrmSet = PromiseSet) {
