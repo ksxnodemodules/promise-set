@@ -9,9 +9,6 @@ insert_final_new_line = true
 charset = utf-8
 
 # tab
-[*.{js,json,md}]
+[*.{js,json,md,sh}]
 indent_style = space
 indent_size = 2
-[*.sh]
-indent_style = tab
-indent_size = 4
