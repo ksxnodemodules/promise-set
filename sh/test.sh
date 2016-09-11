@@ -9,6 +9,6 @@
     exit 2
   )
 ) && (
-  echo Result of \`require\(\'$(pwd)\'\)\`
-  node -p "require('.')"
+  echo "Running '/test/index.js'..."
+  node "$(pwd)/test"
 )
