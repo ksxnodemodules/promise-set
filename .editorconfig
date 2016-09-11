@@ -12,3 +12,7 @@ charset = utf-8
 [*.{js,json,md,sh}]
 indent_style = space
 indent_size = 2
+
+# EOL
+[*.{json,sh}]
+end_of_line = lf
