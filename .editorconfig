@@ -1,18 +1,12 @@
-# top-most
 root = true
-
-# end of line
 insert_final_new_line = true
 
-# charset
 [*.{js,sh,json,yml,md}]
 charset = utf-8
 
-# tab
 [*.{js,json,md,sh}]
 indent_style = space
 indent_size = 2
 
-# EOL
 [*.{json,sh}]
 end_of_line = lf
