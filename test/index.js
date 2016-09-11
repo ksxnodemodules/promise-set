@@ -9,10 +9,6 @@ class CompatibilityError extends Error {
   }
 }
 
-if (XPromiseSet !== require('../x')) {
-  throw new CompatibilityError("`require('promise-set').XPromiseSet` must return 'require('x-promise-set/x')'")
-}
-
 function testnormal (CPrmSet = PromiseSet) {
   const prmset = new CPrmSet()
   console.log(prmset)
@@ -20,6 +16,10 @@ function testnormal (CPrmSet = PromiseSet) {
 
 function testadvance () {
   testnormal(XPromiseSet(Promise, Set))
+}
+
+if (XPromiseSet !== require('../x')) {
+  throw new CompatibilityError("`require('promise-set').XPromiseSet` must return 'require('x-promise-set/x')'")
 }
 
 console.log('Testing PromiseSet...')
