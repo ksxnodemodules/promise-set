@@ -83,12 +83,12 @@ function testnormal (CPrmSet = PromiseSet) {
         assertSetEquality(
           resolveActual,
           resolveExpectation,
-          `Resolving Wronged:\n${assertSetEqualityMessage(resolveActual, resolveExpectation)}`
+          `Resolving Wrong:\n${assertSetEqualityMessage(resolveActual, resolveExpectation)}`
         )
         assertSetEquality(
           rejectActual,
           rejectExpectation,
-          `Rejecting Wronged:\n${assertSetEqualityMessage(rejectActual, rejectExpectation)}`
+          `Rejecting Wrong:\n${assertSetEqualityMessage(rejectActual, rejectExpectation)}`
         )
         resolve([resolveExpectation, rejectExpectation])
       } catch (error) {
