@@ -25,7 +25,8 @@
   "devDependencies": {
     "standard": "8.0.0",
     "assert": "^1.4.1",
-    "x-iterable-base": "^2.1.0"
+    "x-iterable-base": "^2.1.0",
+    "set-comparision": "^1.0.0"
   },
   "author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
   "license": "MIT",
