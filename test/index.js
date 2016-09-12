@@ -2,12 +2,16 @@
 
 const {stdout, stderr, exit} = require('process')
 const assert = require('assert')
+const compareSet = require('set-comparision')
 const {XIterable} = require('x-iterable-base')
 const PromiseSet = require('..')
+const a2x = require('./lib/var-to-doubled-arr.js')
+const strset = require('./lib/set-to-str.js')
 const {console} = global
 const {XPromiseSet} = PromiseSet
-const a2x = x => [x, x]
 const CSet = XIterable(Set)
+const assertSetEquality = (a, b, msg) => assert(compareSet(a, b), msg)
+const assertSetEqualityMessage = (actual, expect) => `\t - Expectation: ${strset(expect)}\n\t - Reality: ${strset(actual)}`
 
 class ExpectationError extends Error {
   get name () {
@@ -33,17 +37,17 @@ function testnormal (CPrmSet = PromiseSet) {
         }
         try {
           const nextObject = act(object, step)
-          new Promise(
+          const future = new Promise(
             (resolve, reject) =>
               expect({object: nextObject, resolve, reject}, ...expectrest)
           )
-            .then(pass)
-            .catch(fail)
-          return step(nextObject, count + 1, ...nextexpectrest)
+          future.then(pass, fail)
+          return step(nextObject, count + 1, ...nextexpectrest) // problem: `nextexpectrest` only be an iterable after promise resolved
         } catch (error) {
           fail(error)
         }
-      }
+      },
+      __proto__: null
     }
   }
   step(new CPrmSet(
@@ -76,8 +80,16 @@ function testnormal (CPrmSet = PromiseSet) {
     const testneg = object.map(failifrejected, failifresolved)
     Promise.all(testneg).then(() => {
       try {
-        assert.deepStrictEqual([...resolveActual], [...resolveExpectation])
-        assert.deepStrictEqual([...rejectActual], [...rejectExpectation])
+        assertSetEquality(
+          resolveActual,
+          resolveExpectation,
+          `Resolving Wronged:\n${assertSetEqualityMessage(resolveActual, resolveExpectation)}`
+        )
+        assertSetEquality(
+          rejectActual,
+          rejectExpectation,
+          `Rejecting Wronged:\n${assertSetEqualityMessage(rejectActual, rejectExpectation)}`
+        )
         resolve([resolveExpectation, rejectExpectation])
       } catch (error) {
         reject(error)
