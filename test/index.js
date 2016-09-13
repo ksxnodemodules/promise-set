@@ -12,6 +12,7 @@ const {XPromiseSet} = PromiseSet
 const CSet = XIterable(Set)
 const assertSetEquality = (a, b, msg) => assert(compareSet(a, b), msg)
 const assertSetEqualityMessage = (actual, expect) => `\t - Expectation: ${strset(expect)}\n\t - Reality: ${strset(actual)}`
+const {fromCharCode} = String
 
 class ExpectationError extends Error {
   get name () {
@@ -21,13 +22,12 @@ class ExpectationError extends Error {
 
 function testnormal (CPrmSet = PromiseSet) {
   const {XPromise} = CPrmSet
-  const step = (object, count = 0, ...expectrest) => {
+  const step = (object, count = 0, ...prevexpect) => {
     console.log(`Begining step ${count}`, object)
     return {
-      nextStep: (act, expect, ...expectrest) => {
-        let nextexpectrest
+      nextStep: (act, expect) => {
+        const currentexpect = expect(...prevexpect)
         const pass = rest => {
-          nextexpectrest = rest || ''
           stdout.write(`Passed step ${count}\n`)
         }
         const fail = error => {
@@ -37,12 +37,13 @@ function testnormal (CPrmSet = PromiseSet) {
         }
         try {
           const nextObject = act(object, step)
-          const future = new Promise(
+          new Promise(
             (resolve, reject) =>
-              expect({object: nextObject, resolve, reject}, ...expectrest)
+              assertResultSet({object: nextObject, resolve, reject}, ...currentexpect)
           )
-          future.then(pass, fail)
-          return step(nextObject, count + 1, ...nextexpectrest) // problem: `nextexpectrest` only be an iterable after promise resolved
+            .then(pass)
+            .catch(fail)
+          return step(nextObject, count + 1, ...currentexpect)
         } catch (error) {
           fail(error)
         }
@@ -59,14 +60,24 @@ function testnormal (CPrmSet = PromiseSet) {
     .nextStep(
       prmset =>
         prmset.map(...a2x(x => x.charCodeAt())),
-      param =>
-        assertResultSet(param, new CSet('abcdefABCDEF'), new CSet('ghijklGHIJKL'))
+      () => [
+        new CSet('abcdefABCDEF'),
+        new CSet('ghijklGHIJKL')
+      ]
     )
     .nextStep(
       prmset =>
         prmset.filter(...a2x(x => x & 1)),
-      (param, prevResolveExpectation, prevRejectExpectation) =>
-        assertResultSet(param, prevResolveExpectation.filter(x => x & 1), prevRejectExpectation.filter(x => x & 1))
+      (...prevexpect) => prevexpect.map(
+        expectation => expectation.filter(x => x & 1)
+      )
+    )
+    .nextStep(
+      prmset =>
+        prmset.map(...a2x(fromCharCode)),
+      (...prevexpect) => prevexpect.map(
+        expectation => expectation.map(fromCharCode)
+      )
     )
   function assertResultSet ({object, resolve, reject}, resolveExpectation, rejectExpectation) {
     const resolveActual = new CSet()
