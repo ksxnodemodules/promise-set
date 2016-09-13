@@ -20,7 +20,7 @@ class ExpectationError extends Error {
   }
 }
 
-function testproc (CPrmSet) {
+function testproc (CPrmSet, testname) {
   const {XPromise} = CPrmSet
   const step = (object, count = 0, ...prevexpect) => {
     console.log(`Begining step ${count}`, object)
@@ -31,7 +31,7 @@ function testproc (CPrmSet) {
           stdout.write(`Passed step ${count}\n`)
         }
         const fail = error => {
-          stderr.write(`Failed at step ${count}: `)
+          stderr.write(`Failed at Step ${count} of Test '${testname}': `)
           console.error(error)
           exit(1)
         }
