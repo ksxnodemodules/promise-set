@@ -20,7 +20,7 @@ class ExpectationError extends Error {
   }
 }
 
-function testnormal (CPrmSet = PromiseSet) {
+function testproc (CPrmSet) {
   const {XPromise} = CPrmSet
   const step = (object, count = 0, ...prevexpect) => {
     console.log(`Begining step ${count}`, object)
@@ -109,8 +109,12 @@ function testnormal (CPrmSet = PromiseSet) {
   }
 }
 
+function testnormal () {
+  testproc(PromiseSet, 'PromiseSet')
+}
+
 function testadvance () {
-  testnormal(XPromiseSet(Promise, Set))
+  testproc(XPromiseSet(Promise, Set), 'XPromiseSet')
 }
 
 assert(
