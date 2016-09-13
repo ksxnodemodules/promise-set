@@ -1,6 +1,6 @@
 'use strict'
 
-const {stdout, stderr, exit} = require('process')
+const {exit} = require('process')
 const assert = require('assert')
 const compareSet = require('set-comparision')
 const {XIterable} = require('x-iterable-base')
@@ -10,8 +10,6 @@ const strset = require('./lib/set-to-str.js')
 const {console} = global
 const {XPromiseSet} = PromiseSet
 const CSet = XIterable(Set)
-const assertSetEquality = (a, b, msg) => assert(compareSet(a, b), msg)
-const assertSetEqualityMessage = (actual, expect) => `\t - Expectation: ${strset(expect)}\n\t - Reality: ${strset(actual)}`
 const {fromCharCode} = String
 
 class ExpectationError extends Error {
@@ -20,18 +18,24 @@ class ExpectationError extends Error {
   }
 }
 
+function assertSetEquality (actual, expect, act) {
+  console.log(`After ${act}:\n\t - Expectation: ${strset(expect)}\n\t - Reality: ${strset(actual)}`)
+  assert(compareSet(actual, expect), 'Assertion Result: failed.')
+  console.log('Assertion Result: passed.')
+}
+
 function testproc (CPrmSet, testname) {
   const {XPromise} = CPrmSet
   const step = (object, count = 0, ...prevexpect) => {
-    console.log(`Begining step ${count}`, object)
+    console.log(`Step ${count} has been started:`, object)
     return {
       nextStep: (act, expect) => {
-        const currentexpect = expect(...prevexpect)
+        const currentexpect = prevexpect.map(expect)
         const pass = rest => {
-          stdout.write(`Passed step ${count}\n`)
+          console.log(`Passed step ${count}`)
         }
         const fail = error => {
-          stderr.write(`Failed at Step ${count} of Test '${testname}': `)
+          console.error(`Failed at Step ${count} of Test '${testname}'`)
           console.error(error)
           exit(1)
         }
@@ -51,33 +55,34 @@ function testproc (CPrmSet, testname) {
       __proto__: null
     }
   }
-  step(new CPrmSet(
-    ...[...'abcdef'].map(x => new XPromise(f => f(x))),
-    ...[...'ghijkl'].map(x => new XPromise((f, g) => g(x))),
-    ...[...'ABCDEF'].map(x => f => f(x)),
-    ...[...'GHIJKL'].map(x => (f, g) => g(x))
-  ))
+  step(
+    new CPrmSet(
+      ...[...'abcdef'].map(x => new XPromise(f => f(x))),
+      ...[...'ghijkl'].map(x => new XPromise((f, g) => g(x))),
+      ...[...'ABCDEF'].map(x => f => f(x)),
+      ...[...'GHIJKL'].map(x => (f, g) => g(x))
+    ),
+    0,
+    new CSet('abcdefABCDEF'),
+    new CSet('ghijklGHIJKL')
+  )
     .nextStep(
       prmset =>
         prmset.map(...a2x(x => x.charCodeAt())),
-      () => [
-        new CSet('abcdefABCDEF'),
-        new CSet('ghijklGHIJKL')
-      ]
+      expectation =>
+        expectation.map(x => x.charCodeAt())
     )
     .nextStep(
       prmset =>
         prmset.filter(...a2x(x => x & 1)),
-      (...prevexpect) => prevexpect.map(
-        expectation => expectation.filter(x => x & 1)
-      )
+      expectation =>
+        expectation.filter(x => x & 1)
     )
     .nextStep(
       prmset =>
         prmset.map(...a2x(fromCharCode)),
-      (...prevexpect) => prevexpect.map(
-        expectation => expectation.map(fromCharCode)
-      )
+      expectation =>
+        expectation.map(fromCharCode)
     )
   function assertResultSet ({object, resolve, reject}, resolveExpectation, rejectExpectation) {
     const resolveActual = new CSet()
@@ -94,12 +99,12 @@ function testproc (CPrmSet, testname) {
         assertSetEquality(
           resolveActual,
           resolveExpectation,
-          `Resolving Wrong:\n${assertSetEqualityMessage(resolveActual, resolveExpectation)}`
+          'Resolving'
         )
         assertSetEquality(
           rejectActual,
           rejectExpectation,
-          `Rejecting Wrong:\n${assertSetEqualityMessage(rejectActual, rejectExpectation)}`
+          'Rejecting'
         )
         resolve([resolveExpectation, rejectExpectation])
       } catch (error) {
@@ -114,7 +119,8 @@ function testnormal () {
 }
 
 function testadvance () {
-  testproc(XPromiseSet(Promise, Set), 'XPromiseSet')
+  class CustomPromiseSet extends XPromiseSet(Promise, Set) {}
+  testproc(CustomPromiseSet, 'XPromiseSet')
 }
 
 assert(
