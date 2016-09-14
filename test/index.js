@@ -31,7 +31,7 @@ function testproc (CPrmSet, testname) {
     return {
       nextStep: (act, expect) => {
         const currentexpect = prevexpect.map(expect)
-        const pass = rest => {
+        const pass = () => {
           console.log(`Passed step ${count}`)
         }
         const fail = error => {
@@ -85,32 +85,26 @@ function testproc (CPrmSet, testname) {
         expectation.map(fromCharCode)
     )
   function assertResultSet ({object, resolve, reject}, resolveExpectation, rejectExpectation) {
-    const resolveActual = new CSet()
-    const rejectActual = new CSet()
-    const failReasonNeg = (value, state) =>
-      reject(new ExpectationError(`Detected '${value}' which shouldn't be ${state}`))
-    const failproc = (unexpectation, state, dest) =>
-      x => unexpectation.has(x) ? failReasonNeg(x, state) : dest.add(x)
-    const failifresolved = failproc(rejectExpectation, 'rejected', resolveActual)
-    const failifrejected = failproc(resolveExpectation, 'resolved', rejectActual)
-    const testneg = object.map(failifrejected, failifresolved)
-    Promise.all(testneg).then(() => {
-      try {
-        assertSetEquality(
-          resolveActual,
-          resolveExpectation,
-          'Resolving'
-        )
-        assertSetEquality(
-          rejectActual,
-          rejectExpectation,
-          'Rejecting'
-        )
-        resolve([resolveExpectation, rejectExpectation])
-      } catch (error) {
-        reject(error)
-      }
-    })
+    const failReasonNeg = ({value, state}) =>
+      new ExpectationError(`Detected '${value}' which shouldn't be ${state}`)
+    const failproc = (unexpectation, state) =>
+      (value, resolve, reject) => (unexpectation.has(value) ? reject : resolve)({value, state})
+    const testneg = object.mapExecutor(
+      failproc(rejectExpectation, 'resolved'),
+      failproc(resolveExpectation, 'rejected')
+    )
+    Promise.all(testneg)
+      .catch(desc => {
+        throw failReasonNeg(desc)
+      })
+      .then(result => {
+        const getset = xState =>
+          new CSet(result.filter(({state}) => state === xState).map(({value}) => value))
+        assertSetEquality(getset('resolved'), resolveExpectation, 'Resolving')
+        assertSetEquality(getset('rejected'), rejectExpectation, 'Rejecting')
+        resolve(result)
+      })
+      .catch(reject)
   }
 }
 
