@@ -69,12 +69,8 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       return mksum(1, 0, this)
     }
     mapExecutor (onfulfill = CALL_RESOLVE, onreject = CALL_REJECT) {
-      const getSize = () => this.size
-      return mkmap({
-        get size () {
-          return getSize()
-        },
-        __proto__: super.map(
+      return new this.constructor(
+        ...super.map(
           promise => new Promise(
             (resolve, reject) => promise.then(
               value =>
@@ -84,7 +80,7 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
             )
           )
         )
-      })
+      )
     }
     map (onfulfill = RETURN, onreject = THROW) {
       return this.mapExecutor(tryexec(onfulfill), tryexec(onreject))
