@@ -20,7 +20,7 @@
     "promise-filter"
   ],
   "dependencies": {
-    "x-iterable-base": "^3.0.0"
+    "x-iterable-base": "^3.0.1"
   },
   "devDependencies": {
     "standard": "8.0.0",
