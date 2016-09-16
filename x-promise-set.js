@@ -68,6 +68,13 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
     get race () {
       return mksum(1, 0, this)
     }
+    get normal () {
+      return {
+        map: (...args) => super.map(...args),
+        filter: (...args) => super.filter(...args),
+        __proto__: mkmap(this)
+      }
+    }
     mapExecutor (onfulfill = CALL_RESOLVE, onreject = CALL_REJECT) {
       return new this.constructor(
         ...super.map(
