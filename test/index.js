@@ -26,10 +26,11 @@ function assertSetEquality (actual, expect, act) {
 
 function testproc (CPrmSet, testname) {
   const {XPromise} = CPrmSet
-  const step = (object, count, ...prevexpect) => {
-    console.log(`Step ${count} has been started:`, object)
+  const step = (object, initcount, ...prevexpect) => {
+    console.log(`Step ${initcount} has been started:`, object)
     return {
       nextStep: (act, expect) => {
+        const count = initcount + 1
         const currentexpect = prevexpect.map(expect)
         const pass = () => {
           console.log(`Passed step ${count}`)
@@ -47,7 +48,7 @@ function testproc (CPrmSet, testname) {
           )
             .then(pass)
             .catch(fail)
-          return step(nextObject, count + 1, ...currentexpect)
+          return step(nextObject, count, ...currentexpect)
         } catch (error) {
           fail(error)
         }
