@@ -38,7 +38,7 @@ function testproc (CPrmSet, testname) {
         const fail = error => {
           console.error(`Failed at Step ${count} of Test '${testname}'`)
           console.error(error)
-          exit(1)
+          setTimeout(exit, 0, 1)
         }
         try {
           const nextObject = act(object, step)
