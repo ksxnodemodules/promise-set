@@ -104,7 +104,11 @@ function testproc (CPrmSet, testname) {
         assertSetEquality(getset('rejected'), rejectExpectation, 'Rejecting')
         resolve(result)
       })
-      .catch(reject)
+      .catch(error => {
+        console.log('resolveExpectation: ', [...resolveExpectation])
+        console.log('rejectExpectation: ', [...rejectExpectation])
+        reject(error)
+      })
   }
 }
 
