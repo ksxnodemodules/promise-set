@@ -118,6 +118,12 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
         __proto__: proto
       })
     }
+    forEach1fn (onfulfill, onreject) {
+      this.map1fn(onfulfill, onreject)
+    }
+    forEach2fn (onfulfill, onreject) {
+      this.map2fn(onfulfill, onreject)
+    }
     forEach (onfulfill, onreject) {
       this.map(onfulfill, onreject)
     }
