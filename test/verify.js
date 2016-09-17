@@ -10,6 +10,6 @@ if (count === expected) {
   exit(0)
 } else {
   stderr.write('VERIFICATION FAILED!')
-  stdout.write(`Expecting ${expected} tests being checked but got ${count}`)
+  stdout.write(`Expecting ${expected} steps being tested but got ${count}`)
   exit(2)
 }
