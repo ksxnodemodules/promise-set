@@ -1,6 +1,7 @@
 'use strict'
 
-const {exit} = require('process')
+const {writeFileSync, readFileSync} = require('fs')
+const {exit, env: {TEST_COUNT_LOGS, TEST_COUNT_LOGS_DELEMITER}} = require('process')
 const assert = require('assert')
 const compareSet = require('set-comparision')
 const {XIterable} = require('x-iterable-base')
@@ -35,6 +36,7 @@ function testproc (CPrmSet, testname) {
         const currentexpect = prevexpect.map(expect)
         const pass = () => {
           console.log(`Passed step ${count}`)
+          writeFileSync(TEST_COUNT_LOGS, readFileSync(TEST_COUNT_LOGS) + String(count) + TEST_COUNT_LOGS_DELEMITER)
         }
         const fail = error => {
           console.error(`Failed at Step ${count} of Test '${testname}'`)
@@ -128,6 +130,7 @@ assert(
   "`require('promise-set').XPromiseSet` must return 'require('x-promise-set/x')'"
 )
 
+writeFileSync(TEST_COUNT_LOGS, '')
 console.log('Testing PromiseSet...')
 testnormal()
 console.log('Testing XPromiseSet...')
