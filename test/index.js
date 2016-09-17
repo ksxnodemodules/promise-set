@@ -7,6 +7,7 @@ const {XIterable} = require('x-iterable-base')
 const PromiseSet = require('..')
 const fn2rsrj = require('./lib/fn-to-rs-rj.js')
 const strset = require('./lib/set-to-str.js')
+const countpromise = require('./lib/count-prm-set.js')
 const {console} = global
 const {XPromiseSet} = PromiseSet
 const CSet = XIterable(Set)
@@ -94,7 +95,7 @@ function testproc (CPrmSet, testname) {
       failproc(rejectExpectation, 'resolved'),
       failproc(resolveExpectation, 'rejected')
     )
-    Promise.all(testneg)
+    countpromise(testneg, [...resolveExpectation, ...rejectExpectation].length)
       .catch(desc => {
         throw failReasonNeg(desc)
       })
