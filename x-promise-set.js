@@ -94,6 +94,7 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
         value => callback(value, 'fulfilled', this),
         reason => { throw callback(reason, 'rejected', this) }
       )
+    }
     map2fn (onfulfill = RETURN, onreject = THROW) {
       return this.mapExecutor(tryexec(onfulfill), tryexec(onreject))
     }
