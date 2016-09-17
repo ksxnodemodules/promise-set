@@ -90,7 +90,7 @@ function XPromiseSet (XPromise = Promise, XSet = Set) {
       )
     }
     map1fn (callback = RETURN) {
-      return new this.mapExecutor(
+      return this.mapExecutor(
         value => callback(value, 'fulfilled', this),
         reason => { throw callback(reason, 'rejected', this) }
       )
