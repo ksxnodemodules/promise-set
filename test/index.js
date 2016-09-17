@@ -5,7 +5,7 @@ const assert = require('assert')
 const compareSet = require('set-comparision')
 const {XIterable} = require('x-iterable-base')
 const PromiseSet = require('..')
-const a2x = require('./lib/val-to-doubled-arr.js')
+const fn2rsrj = require('./lib/fn-to-rs-rj.js')
 const strset = require('./lib/set-to-str.js')
 const {console} = global
 const {XPromiseSet} = PromiseSet
@@ -69,19 +69,19 @@ function testproc (CPrmSet, testname) {
   )
     .nextStep(
       prmset =>
-        prmset.map(...a2x(x => x.charCodeAt())),
+        prmset.map(...fn2rsrj(x => x.charCodeAt())),
       expectation =>
         expectation.map(x => x.charCodeAt())
     )
     .nextStep(
       prmset =>
-        prmset.filter(...a2x(x => x & 1)),
+        prmset.filter(...fn2rsrj(x => x & 1)),
       expectation =>
         expectation.filter(x => x & 1)
     )
     .nextStep(
       prmset =>
-        prmset.map(...a2x(fromCharCode)),
+        prmset.map(...fn2rsrj(fromCharCode)),
       expectation =>
         expectation.map(fromCharCode)
     )
