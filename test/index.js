@@ -26,7 +26,7 @@ function assertSetEquality (actual, expect, act) {
   console.log('Assertion Result: passed.')
 }
 
-function testproc (CPrmSet, testname) {
+function testproc (CPrmSet, stage) {
   const {XPromise} = CPrmSet
   const step = (object, initcount, ...prevexpect) => {
     console.log(`Step ${initcount} has been started:`, object)
@@ -35,11 +35,11 @@ function testproc (CPrmSet, testname) {
         const count = initcount + 1
         const currentexpect = prevexpect.map(expect)
         const pass = () => {
-          console.log(`Passed step ${count}`)
+          console.log(`Passed Step ${stage}.${count}`)
           writeFileSync(TEST_COUNT_LOGS, readFileSync(TEST_COUNT_LOGS) + String(count) + TEST_COUNT_LOGS_DELEMITER)
         }
         const fail = error => {
-          console.error(`Failed at Step ${count} of Test '${testname}'`)
+          console.error(`Failed at Step ${stage}.${count}'`)
           console.error(error)
           setTimeout(exit, 0, 1)
         }
@@ -117,12 +117,12 @@ function testproc (CPrmSet, testname) {
 }
 
 function testnormal () {
-  testproc(PromiseSet, 'PromiseSet')
+  testproc(PromiseSet, 1)
 }
 
 function testadvance () {
   class CustomPromiseSet extends XPromiseSet(Promise, Set) {}
-  testproc(CustomPromiseSet, 'XPromiseSet')
+  testproc(CustomPromiseSet, 2)
 }
 
 assert(
