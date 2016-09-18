@@ -29,7 +29,7 @@ function assertSetEquality (actual, expect, act) {
 function testproc (CPrmSet, stage) {
   const {XPromise} = CPrmSet
   const step = (object, initcount, ...prevexpect) => {
-    console.log(`Step ${initcount} has been started:`, object)
+    console.log(`Step ${stage}.${initcount} has been started:`, object)
     return {
       nextStep: (act, expect) => {
         const count = initcount + 1
