@@ -21,7 +21,7 @@ class ExpectationError extends Error {
 }
 
 function assertSetEquality (actual, expect, act) {
-  console.log(`After ${act}:\n\t - Expectation: ${strset(expect)}\n\t - Reality: ${strset(actual)}`)
+  console.log(`After ${act}:\n  - Expectation: ${strset(expect)}\n  - Reality: ${strset(actual)}`)
   assert(compareSet(actual, expect), 'Assertion Result: failed.')
   console.log('Assertion Result: passed.')
 }
